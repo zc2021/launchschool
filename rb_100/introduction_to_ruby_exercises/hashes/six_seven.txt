@@ -1,0 +1,10 @@
+exercise six:
+x = "hi there"
+my_hash = {x: "some value"}
+my_hash2 = {x => "some value"}
+
+my_hash has key :x (symbol with name x)
+my_hash has key "hi there" (string value of variable x assigned on first line)
+
+exercise seven:
+B. Error is b/c Array has no 'keys' method (array 'keys' are numerical positions - indexes - beginning at 0)

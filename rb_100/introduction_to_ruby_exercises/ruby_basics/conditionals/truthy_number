@@ -1,0 +1,1 @@
+"My favorite number is 7" -> if statement evaluates number (no comparison); as number is assigned value 7, number evaluates to 'true' (not-nil)

@@ -1,0 +1,16 @@
+pt 1) wrong on all counts - prints nums 0 - 5 on a separate line
+	#times method called on integer repeats passed block int times
+	passes value from 0 to int-1
+	returns initial integer
+	#times called in count_sheep returns 5 to count_sheep, which is then printed with puts
+pt 2)   0
+	1
+	2
+	3
+	4
+	10
+	- 0 - 4 print due to #times call on int 5 in count_sheep method definition, as in pt 1. 10 prints as it is returned from count_sheep and passed to the puts call on line 8
+pt 3)   0
+	1
+	5 X nil -> because return statement does not return value; Integer#times never returns Integer
+	- same as starts of pts 1 & 2, but count_sheep returns during 2nd iteration of #times block due to return in if statement [SEE CORRECTION RE: RETURN VALUE]

@@ -1,0 +1,4 @@
+1
+
+only clause evaluated in tricky_number method definition is <<number = 1>>, which evaluates to 1
+returned implicitly as final evaluation in method definition

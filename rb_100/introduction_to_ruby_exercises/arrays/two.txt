@@ -1,0 +1,6 @@
+1. returns nilX <- WRONG last line only deletes 2nd element of 1st sub-array, returns deleted element
+arr = [["b"], ["b", 2], ["b", 3], ["a", 1], ["a", 2], ["a", 3]]
+
+2. returns [1, 2, 3]
+arr = [["b"], ["a", [1, 2, 3]]]
+

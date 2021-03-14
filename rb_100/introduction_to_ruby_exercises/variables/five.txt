@@ -1,0 +1,2 @@
+first case: x = 3, no error; x is initializd in outer scope
+2nd case: x = 3, error; x is initialized in inner scope and not passed to outer scope -> NameError

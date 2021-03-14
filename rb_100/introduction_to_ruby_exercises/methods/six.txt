@@ -1,0 +1,3 @@
+Error is ArgumentError, says you have provided one argument where method requires two
+
+Method is on line 1 of irb, method 'calculate_product'

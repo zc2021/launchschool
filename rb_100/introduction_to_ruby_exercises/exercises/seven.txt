@@ -1,0 +1,3 @@
+both arrays and hashes store data in enumerable objects, associating keys and values
+array keys are numeric, sequential from 0, and ordered
+hash keys can be of many (any?) data types, are unique to the containing hash, and are unordered

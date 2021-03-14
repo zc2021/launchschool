@@ -1,0 +1,3 @@
+setting array value using string as key instead of integer index
+
+fix by changing string 'margaret' on line 2 to index 3
