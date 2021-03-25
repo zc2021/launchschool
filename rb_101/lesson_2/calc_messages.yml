@@ -1,0 +1,28 @@
+welcome: 'Welcome to Calculator! Enter your name:'
+greet: Hi
+continue: Do you want to perform another calculation? (Y/other)
+goodbye: Thank you for using the calculator. Goodbye!
+
+errors:
+  name_error: What should I call you?
+  num_error: Hmm... that doesn't look like a valid number.
+  op_error: Must choose 1, 2, 3, or 4
+
+num_a: What's the first number?
+num_b: What's the second number?
+
+op_prompt: |
+  What operation would you like to perform?
+    1) add
+    2) subtract 
+    3) multiply 
+    4) divide
+
+op_perform: the two numbers...
+op_result: The result is
+
+ops:
+  '1': Adding
+  '2': Subtracting
+  '3': Multiplying
+  '4': Dividing

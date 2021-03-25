@@ -1,0 +1,57 @@
+1. a method that returns the sum of two integers
+
+# given two integer arguments
+START
+SET num1 = passed as argument
+SET num2 = passed as argument
+
+SET result = num1 + num2
+
+PRINT result
+
+END
+
+# get integer input from user 
+START
+SET num1 = GET "Enter first number: "
+SET num2 = GET "Enter second number: "
+
+SET result = num1 + num2
+
+PRINT result
+
+END
+-----------------------------------
+2. a method that takes an array of strings and returns a single concatenated string with all values
+
+START
+SET string_array = given array
+SET iterator = 0
+SET result_string = ""
+
+WHILE iterator < string_array.length (length of given string array -> 0-indexed)
+  SET current_string = value at position #iterator in string_array
+  SET result_string = result_string + current_string
+  SET iterator = iterator + 1
+
+PRINT result_string
+
+END
+---------------------------------
+3. a method that takes an array of integers, and returns a new array with every other element
+
+START
+SET integer_array = given array
+SET iterator = 0
+SET result_array = [] (empty array)
+
+WHILE iterator < integer_array.length (length of given integer array -> 0-indexed)
+  IF iterator modulo 2 == 0
+    current_integer = integer_array[iterator] (item @ position #iterator in integer_array)
+    result_array.append(current_integer) <- add current_integer to integer_array
+  SET iterator = iterator + 1 (increment iterator)
+
+PRINT result_array
+
+END
+
