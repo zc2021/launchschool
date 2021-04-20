@@ -1,0 +1,20 @@
+Q1) 1, 2, 3
+WRONG -> code is:
+numbers = [1, 2, 2, 3]
+numbers.uniq
+
+puts numbers
+
+while numbers.uniq returns [1, 2, 3], it does not mutate numbers. puts is passed the original numbers array, and prints one item per line
+----------------------------------------------------
+Q2) by convention, ! is used at the end of method names that mutate the caller and ? is used at the end of method names that return a boolean (NOT BINDING)
+
+  1) != is not equals and is used to compare to values for non-equality
+  2) ! before something gives its boolean opposite
+  3) ! after something indicates - but does not guarantee - a method mutates the caller
+  4) ? before something is part of the ternary operator (truth test? true : false)
+  5) ? after something indicates - but does not guarantee - a method returns a boolean
+  6) !! converts something to its boolean value
+-----------------------------------------------------
+Q4} Array#delete_at() deletes the Array item at index passed, while Array#delete() deletes matching values
+-----------------------------------------------------
