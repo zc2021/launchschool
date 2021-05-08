@@ -71,16 +71,16 @@ def shuffle_deck(deck)
   shuffled_deck
 end
 
-def deal_card(deck, hand)
+def deal_card!(deck, hand)
   card = deck.keys.pop
   hand[card] = deck[card]
   deck[card] = nil
   deck.compact!
 end
 
-def deal_hands(deck, players)
+def deal_hands!(deck, players)
   2.times do |_|
-    players.keys.each { |player_hand| deal_card(deck, players[player_hand]) }
+    players.keys.each { |player_hand| deal_card!(deck, players[player_hand]) }
   end
 end
 
@@ -97,29 +97,29 @@ def input_action
   action
 end
 
-def human_turn(hand, deck)
+def human_turn!(hand, deck)
   choice = input_action
   unless choice == 's'
-    deal_card(deck, hand)
+    deal_card!(deck, hand)
   end
   choice
 end
 
-def computer_turn(hand, deck)
+def computer_turn!(hand, deck)
   choice = 's'
   points = score_hand(hand)
   if points[0] < AI_BREAKPOINT
-    deal_card(deck, hand)
+    deal_card!(deck, hand)
     choice = 'h'
   end
   choice
 end
 
-def take_turn(hand, chair, deck, own_id=:player_1)
+def take_turn!(hand, chair, deck, own_id=:player_1)
   if chair == own_id
-    human_turn(hand, deck)
+    human_turn!(hand, deck)
   else
-    computer_turn(hand, deck)
+    computer_turn!(hand, deck)
   end
 end
 
@@ -369,7 +369,7 @@ loop do
 
       round_hands = seat_players(players)
 
-      deal_hands(round_deck, round_hands)
+      deal_hands!(round_deck, round_hands)
       starting_scores = score_table(round_hands)
 
       round_hands.each do |player, _|
@@ -384,7 +384,7 @@ loop do
 
           sleep(0.5) unless player == own_id
 
-          action = take_turn(round_hands[player], player, round_deck)
+          action = take_turn!(round_hands[player], player, round_deck)
           display_cards(round_hands)
 
           score = score_hand(round_hands[player])
