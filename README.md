@@ -2,5 +2,5 @@
 publich launchschool profile
 
 coursework:
-rb100
-rb101
+* rb100
+* rb101
