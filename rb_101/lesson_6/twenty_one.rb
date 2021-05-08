@@ -1,4 +1,4 @@
-SCREEN_WIDTH = 40
+SCREEN_WIDTH = 80
 
 CARD_SUITS = %w(H D C S)
 CARD_VALUES = %w(02 03 04 05 06 07 08 09 10 J* Q* K* A*)
@@ -12,6 +12,11 @@ AI_BREAKPOINT = 17
 
 # housekeeping
 
+def draw_line(width=SCREEN_WIDTH)
+  line = "-" * (width - 2)
+  puts "+#{line}+".center(SCREEN_WIDTH)
+end
+
 def prompt(msg)
   width = SCREEN_WIDTH - 10
   puts "~*~> #{msg.center(width)} <~*~"
@@ -22,20 +27,13 @@ def pretty_name(sym)
   str.split('_').join(' ').capitalize.ljust(8)
 end
 
-def yn_question?(msg)
-  prompt msg.to_s
-  prompt "[Y] / [N]"
-  answer = gets.chomp.downcase
-  answer.start_with? 'y'
-end
-
 # setup
 
-def make_table(guest_count=1)
+def make_table(player_count=1)
   all_players = { dealer: {} }
-  guest_count.times do |guest|
-    guest_name = "player_#{guest + 1}".to_sym
-    all_players[guest_name] = {}
+  player_count.times do |player|
+    player = "player_#{player + 1}".to_sym
+    all_players[player] = {}
   end
   all_players
 end
@@ -69,9 +67,7 @@ end
 def shuffle_deck(deck)
   shuffled_deck = {}
   cards = deck.keys.shuffle
-  cards.each do |card|
-    shuffled_deck[card] = deck[card]
-  end
+  cards.each { |card| shuffled_deck[card] = deck[card] }
   shuffled_deck
 end
 
@@ -83,8 +79,8 @@ def deal_card(deck, hand)
 end
 
 def deal_hands(deck, players)
-  players.keys.each do |player_hand|
-    2.times { |_| deal_card(deck, players[player_hand]) }
+  2.times do |_|
+    players.keys.each { |player_hand| deal_card(deck, players[player_hand]) }
   end
 end
 
@@ -155,11 +151,11 @@ def twenty_one?(score)
 end
 
 def win?(score, dlr_p=0)
-  twenty_one?(score) || score[0] > dlr_p && score[1] == -1
+  twenty_one?(score) || score[1] == -1 && score[0] > dlr_p
 end
 
 def lose?(score, dlr_p=0)
-  bust?(score) || score[0] < dlr_p && score[1] == -1
+  bust?(score) || score[1] == -1 && score[0] < dlr_p
 end
 
 def score_table(table)
@@ -172,9 +168,7 @@ end
 
 def table_winners(scored_tbl)
   dlr_points = bust?(scored_tbl[:dealer]) ? 0 : scored_tbl[:dealer][0]
-
   winner_sym = {}
-
   scored_tbl.reject { |player, _| player == :dealer }.each do |player, p_score|
     winner_sym[player] = if lose?(p_score, dlr_points)
                            :dealer
@@ -184,7 +178,6 @@ def table_winners(scored_tbl)
                            :draw
                          end
   end
-
   winner_sym
 end
 
@@ -203,6 +196,13 @@ def game_winners(round_wins)
 end
 
 # display methods
+
+def yn_question?(msg)
+  prompt msg.to_s
+  prompt "[Y] / [N]"
+  answer = gets.chomp.downcase
+  answer.start_with? 'y'
+end
 
 def visible_cards(hand, player_id, own_id=:player_1)
   case player_id
@@ -236,6 +236,31 @@ def win_strings(names)
   winner_str
 end
 
+def print_rules
+  system 'clear'
+  draw_line
+  prompt "How it Works"
+  puts "1. Each player is dealt two cards."
+  puts "2. Players proceed in turn, ending with the dealer."
+  puts "3. On their turn, a player may hit (get a card) or stay (end turn)."
+  puts "4. Closest to #{WIN_VALUE} without going over wins."
+  prompt "We play best of #{DEF_RNDS}"
+  draw_line
+  print_scoring
+end
+
+def print_scoring
+  prompt "Card Values"
+  draw_line(21)
+  puts "|  2 - 10 :  face   |".center(SCREEN_WIDTH)
+  draw_line(21)
+  puts "| J, Q, K :   10    |".center(SCREEN_WIDTH)
+  draw_line(21)
+  puts "|   Ace   : 1 or 11 |".center(SCREEN_WIDTH)
+  draw_line(21)
+  draw_line
+end
+
 def display_score(name, scr)
   name_str = pretty_name(name)
   prompt "#{name_str}: #{scr[0]}"
@@ -248,18 +273,18 @@ end
 
 def display_cards(player_hands, round_over=false)
   system 'clear'
-  puts "+--------------------------------------+"
+  draw_line
   player_hands.keys.each do |player_name|
     name = pretty_name(player_name)
     cards = player_hands[player_name].keys
     if round_over
-      puts "| #{name}: #{cards.join(', ')}"
+      puts " ** #{name}: #{cards.join(', ')}"
     else
       cards_seen = visible_cards(cards, player_name)
-      puts "| #{name}: #{cards_seen.join(', ')}"
+      puts " ** #{name}: #{cards_seen.join(', ')}"
     end
   end
-  puts "+--------------------------------------+"
+  draw_line
 end
 
 def display_round_over(players, tbl_scores, rnd_wins, rnd_cnt)
@@ -267,15 +292,15 @@ def display_round_over(players, tbl_scores, rnd_wins, rnd_cnt)
   tbl_scores.each do |chair, scores|
     display_score(chair, scores)
   end
-  puts "+--------------------------------------+"
+  draw_line
   pretty_winners = win_strings(rnd_wins)
   pretty_winners.each do |player, win_str|
     hand_str = pretty_name(player)
     prompt "#{hand_str}: #{win_str}"
   end
-  puts "+--------------------------------------+"
+  draw_line
   prompt "ROUND #{rnd_cnt} / #{DEF_RNDS}"
-  puts "+--------------------------------------+"
+  draw_line
 end
 
 def display_leaderboard(round_wins)
@@ -283,12 +308,12 @@ def display_leaderboard(round_wins)
   pretty_players.each do |player, win_count|
     prompt "#{player.upcase} WON #{win_count} / #{DEF_RNDS}"
   end
-  puts "+--------------------------------------+"
+  draw_line
 end
 
 def display_game_over(round_wins)
   system 'clear'
-  puts "+--------------------------------------+"
+  draw_line
   display_leaderboard(round_wins)
   grand_winners = game_winners(round_wins)
   if grand_winners
@@ -297,9 +322,9 @@ def display_game_over(round_wins)
       prompt "#{name} won with #{rnds_won} of #{DEF_RNDS}!"
     end
   else
-    prompt "The house ALWAYS wins."
+    prompt "They say the house always wins."
   end
-  puts "+--------------------------------------+"
+  draw_line
 end
 
 # let's play
@@ -307,10 +332,12 @@ end
 loop do
   system 'clear'
   own_id = :player_1
-  prompt "Welcome to #{WIN_VALUE} - Baby Blackjack"
+  prompt "Welcome to #{WIN_VALUE} - A Blackjack Ancestor"
   break unless yn_question?("Play a game?")
 
   prompt "Have a seat at the table."
+
+  print_rules if yn_question?("Do you want to see the rules?")
 
   loop do
     player_count = 1
@@ -322,7 +349,7 @@ loop do
         additional_players = gets.chomp.to_i
         break if (1..4).include? additional_players
         if additional_players >= 5
-          prompt "Let's try a smaller game first."
+          prompt "Let's try a smaller game."
         elsif additional_players.to_i.to_s != additional_players
           prompt "Pardon?"
         end
@@ -330,7 +357,7 @@ loop do
 
       player_count += additional_players
 
-      break unless yn_question?("Game for #{player_count}, plus dealer?")
+      break unless yn_question?("Game for #{player_count} against the house?")
     end
 
     round_count = 1
@@ -345,24 +372,24 @@ loop do
       deal_hands(round_deck, round_hands)
       starting_scores = score_table(round_hands)
 
-      round_hands.each do |chair, _|
+      round_hands.each do |player, _|
         display_cards(round_hands)
-        score = starting_scores[chair]
+        score = starting_scores[player]
 
         loop do
-          prompt "#{pretty_name(chair)} turn"
-          display_score(chair, score) if chair == own_id
+          prompt "#{pretty_name(player)} turn"
+          display_score(player, score) if player == own_id
           break if bust?(score)
           break if twenty_one?(score)
 
-          sleep(0.5) unless chair == own_id
+          sleep(0.5) unless player == own_id
 
-          action = take_turn(round_hands[chair], chair, round_deck)
+          action = take_turn(round_hands[player], player, round_deck)
           display_cards(round_hands)
 
-          score = score_hand(round_hands[chair])
+          score = score_hand(round_hands[player])
 
-          sleep(0.5) unless chair == own_id
+          sleep(0.5) unless player == own_id
 
           break if action == 's'
         end
