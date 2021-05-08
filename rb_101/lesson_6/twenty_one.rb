@@ -97,7 +97,7 @@ def input_action
   action
 end
 
-def human_turn!(hand, deck)
+def human_turn(hand, deck)
   choice = input_action
   unless choice == 's'
     deal_card!(deck, hand)
@@ -105,7 +105,7 @@ def human_turn!(hand, deck)
   choice
 end
 
-def computer_turn!(hand, deck)
+def computer_turn(hand, deck)
   choice = 's'
   points = score_hand(hand)
   if points[0] < AI_BREAKPOINT
@@ -115,11 +115,11 @@ def computer_turn!(hand, deck)
   choice
 end
 
-def take_turn!(hand, chair, deck, own_id=:player_1)
+def take_turn(hand, chair, deck, own_id=:player_1)
   if chair == own_id
-    human_turn!(hand, deck)
+    human_turn(hand, deck)
   else
-    computer_turn!(hand, deck)
+    computer_turn(hand, deck)
   end
 end
 
@@ -384,7 +384,7 @@ loop do
 
           sleep(0.5) unless player == own_id
 
-          action = take_turn!(round_hands[player], player, round_deck)
+          action = take_turn(round_hands[player], player, round_deck)
           display_cards(round_hands)
 
           score = score_hand(round_hands[player])
