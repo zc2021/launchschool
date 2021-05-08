@@ -2,6 +2,8 @@
 publich launchschool profile
 
 current contents:
-RB100 coursework and assessment errata
+`coursework`
+rb100
+rb101
 
-primarily for personal use - questions welcome but may not be answered
+and assessment errata
