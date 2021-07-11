@@ -44,8 +44,8 @@ module TableDisplay
   end
 
   def display_results(players)
-    box_h = get_height / 2
-    box_w = get_width
+    box_h = height / 2
+    box_w = width
     display_table(players, see_all: true)
     msg_box(
       box_w, box_h, *collected_results_messages(players),
@@ -57,7 +57,7 @@ module TableDisplay
     dlr = players.select { |p| p.class == Dealer }[0]
     results = [score_msg(dlr)]
     players.reject { |p| p.class == Dealer }.each do |plyr|
-      results << '-' * (get_width - 2)
+      results << '-' * (width - 2)
       results << score_msg(plyr) unless won?(plyr)
       results << results_message(plyr)
     end
