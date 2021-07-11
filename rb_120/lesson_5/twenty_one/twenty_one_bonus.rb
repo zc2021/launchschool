@@ -220,16 +220,8 @@ end
 # card classes
 
 class Deck
-  @@suits = ["\u2660", "\u2663", "\u2665", "\u2666"]
-  @@values = %w(2 3 4 5 6 7 8 9 10 J Q K A)
-
-  def self.suits
-    @@suits
-  end
-
-  def self.values
-    @@values
-  end
+  SUITS = ["\u2660", "\u2663", "\u2665", "\u2666"]
+  VALUES = %w(2 3 4 5 6 7 8 9 10 J Q K A)
 
   def initialize(count)
     @cards = []
@@ -256,8 +248,8 @@ class Deck
   private
 
   def make_cards
-    Deck.suits.each do |s|
-      Deck.values.each do |v|
+    Deck::SUITS.each do |s|
+      Deck::VALUES.each do |v|
         cards << Card.new(s, v)
       end
     end
