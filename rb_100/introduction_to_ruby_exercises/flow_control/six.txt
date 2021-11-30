@@ -1,6 +1,0 @@
-Y 1. error - cannot compare integer with string
-N 2. error - cannot compare integer with string # FALSE -> implicit conversion?!?!?
-Y3. FALSE
-Y4. TRUE
-Y5. FALSE
-Y6. FALSE

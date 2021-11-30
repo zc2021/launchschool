@@ -1,6 +1,4 @@
-# launchschool
-publich launchschool profile
+# Launch School Coursework
 
-coursework:
-* rb100
-* rb101
+## Guided Projects
+- 

@@ -1,5 +1,0 @@
-1. x = 2 => 2
-2. puts x = 2 => nil
-3. p name = "Joe" => nil WRONG "Joe" [Note: has to do with behavior of p vs print vs puts; last two methods return nil, p returns argument passed]
-4. four = "four" => "four"
-5. print something = "nothing" => nil

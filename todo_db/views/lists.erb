@@ -1,0 +1,14 @@
+<ul id="lists">
+  <% sink_lists(lists).each do |list, id| %>
+    <li <%= list_class(list) %>>
+      <a href="/lists/<%= id %>">
+        <h2><%= list[:name] %></h2> 
+        <p><%= remaining_todos_count(list) %> / <%= todos_count(list) %></p>
+      </a>
+    </li>
+  <% end %>
+</ul>
+
+<% content_for :header_links do %>
+  <a class="add" href="/lists/new">New List</a>
+<% end %>

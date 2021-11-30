@@ -1,0 +1,159 @@
+#! /usr/bin/env ruby
+
+require 'pg'
+require 'io/console'
+
+module Displayable
+  def print_expenses db_results, show_total=true
+    if db_results.ntuples == 0
+      puts 'There are no expenses.'
+    else
+      total = 0
+      puts("There are #{db_results.ntuples} expenses.") if show_total
+      db_results.each do |tuple|
+        total += tuple['amount'].to_f
+        entry = [
+          tuple['id'].rjust(4),
+          tuple['created_on'].rjust(10),
+          "$#{tuple['amount'].rjust(8)}".rjust(10),
+          tuple['memo'].ljust(15)
+        ]
+        puts entry.join(' | ')
+      end
+      if show_total
+        total = total.round(2)
+        puts '-' * 50
+        puts ['Total'.ljust(21),"$#{total.to_s.rjust(8)}".ljust(29)].join('')
+      end
+    end
+  end
+
+  def print_help
+    puts <<~HELP 
+    An expense recording system
+    
+    Commands
+    
+    add AMOUNT MEMO [DATE] - record a new expense
+    clear - delete all expenses
+    list - list all expenses
+    delete NUMBER - remove expense with id NUMBER
+    search QUERY - list expenses with a matching memo
+    HELP
+  end
+end
+
+class ExpenseData
+  def initialize
+    @db_conn = PG::Connection.open(dbname: 'expense_app')
+    @schema = File.open('schema.sql') { |f| f.read.gsub(/\s/, ' ') }
+    @expense_table = 'expenses'
+    setup_schema
+  end
+
+  def list_expenses
+    db_conn.exec("SELECT * FROM #{expense_table};")
+  end
+
+  def insert_expense *details
+    amount, memo, date = details
+    if date
+      db_conn.exec_params(
+        "INSERT INTO #{expense_table} (amount, memo, created_on) VALUES ($1, $2, $3);",
+        [amount, memo, date]
+      )
+    else
+      db_conn.exec_params(
+        "INSERT INTO #{expense_table} (amount, memo) VALUES ($1, $2);",
+        [amount, memo]
+      )
+    end
+  end
+
+  def search_expenses param, field='memo'
+    db_conn.exec_params("SELECT * FROM #{expense_table} WHERE #{field}=$1;", [param])
+  end
+
+  def delete_expense id
+    expense_details = search_expenses id, field='id'
+    db_conn.exec_params("DELETE FROM #{expense_table} WHERE id=$1;", [id])
+    expense_details
+  end
+
+  def clear_expenses
+    db_conn.exec_params("DELETE FROM #{expense_table};")
+  end
+
+  private
+
+  attr_reader :db_conn, :expense_table, :schema
+
+  def setup_schema
+    check = db_conn.exec("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '#{expense_table}';")
+    if check.values[0] == ["0"]
+      db_conn.exec(self.schema)
+    end
+  end
+end
+
+class CLI
+  include Displayable
+
+  def initialize
+    @expense_data = ExpenseData.new
+  end
+
+  def run(*args)
+    if args[0]
+      self.send(*args)
+    else
+      self.help
+    end
+  end
+
+  private
+
+  attr_reader :expense_data
+
+  def help
+    print_help
+  end
+
+  def list
+    print_expenses(expense_data.list_expenses)
+  end
+
+  def clear
+    puts 'This will remove all expenses. Are you sure? (y/n)'
+    choice = STDIN.getch
+    if choice == 'y'
+      expense_data.clear_expenses
+      puts 'All expenses have been deleted.'
+    end
+  end
+
+  def add(*args)
+    amount, memo, date = args
+    if amount && memo
+      expense_data.insert_expense amount, memo, date
+    else
+      puts 'You must provide an amount and a memo.'
+    end
+  end
+
+  def search(memo)
+    print_expenses(expense_data.search_expenses(memo))
+  end
+
+  def delete(id)
+    details = expense_data.delete_expense(id)
+    if details.ntuples > 0
+      puts 'The following expense has been deleted:'
+      print_expenses(details, false)
+    else
+      puts "There is no expense with id #{id}."
+    end
+  end
+end
+
+CLI.new.run(*ARGV)
