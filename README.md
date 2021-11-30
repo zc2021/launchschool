@@ -1,4 +1,1 @@
-# Launch School Coursework
-
-## Guided Projects
-- 
+### Launch School guided projects
