@@ -10,8 +10,7 @@ include PrettyShell
 class TwentyOneError < StandardError; end
 class InvalidChoiceError < TwentyOneError; end
 
-# participants
-
+# game participant classes
 class Participant
   attr_reader :name, :strategy
   attr_accessor :hand
@@ -95,8 +94,7 @@ class Computer < Player
   end
 end
 
-# participant collabs
-
+# participant collaborator classes (human UI, hand to hold cards)
 class UserInterface
   @@human_name = nil
 
